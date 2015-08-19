@@ -1,58 +1,87 @@
-var balance1 = 0;
-var balance2 = 0;
-var account1Overdrawn = false;
-var account2Overdrawn = false;
+var balance1 = 56;
+var balance2 = 32;
 
-$(function(){
+
+// onload, action event listeners. 
+//each event listener will trigger corospnding function.
+$(document).ready(function(){
   $('#deposit1').click(depositAccount1);
   $('#deposit2').click(depositAccount2);
   $('#withdraw1').click(withdrawAccount1);
   $('#withdraw2').click(withdrawAccount2);
-});
+  $('#balance1').text('£' + balance1);
+  $('#balance2').text('£' + balance2);
 
+});
+//simply adds balance to matching input box. 
+//calls update HTML Function. 
 function depositAccount1() {
   balance1 = balance1 + parseInt($('#amount1').val());
   updateAccountsHTML();
 }
 
+//simply adds balance to matching input box. 
+//calls update HTML Function.
 function depositAccount2() {
-  balance2 = balance2 + parseInt($('#amount2').val());
+  balance2 = balance2 + parseInt($('#amount2').val());;
   updateAccountsHTML();
 }
 
+
 function withdrawAccount1() {
-  possibleBalance1 = balance1
-  possibleBalance1 = possibleBalance1 - parseInt($('#amount1').val());
-  withdraw(possibleBalance1, balance1);
-  if (account1Overdrawn === false){
-    balance1 = possibleBalance1;
-    updateAccountsHTML();
-  } else if (account1Overdrawn === false){
-    console.log('account is overdrawn');
-  }
+  var amount = parseInt($('#amount1').val());
+  balances = withdraw(amount, balance1, balance2);
 
+  balance1 = balances[0];
+  balance2 = balances[1];
 
-
+  updateAccountsHTML();
 }
+
 
 function withdrawAccount2() {
-  balance2 = balance2 - parseInt($('#amount2').val());
+  var amount = parseInt($('#amount2').val());
+  balances = withdraw(amount, balance2, balance1);
+
+  balance2 = balances[0];
+  balance1 = balances[1];
+  
+  updateAccountsHTML();
 }
 
-
-function withdraw(potentialBallace, account){
-  if (possibleBalance1 > 0)  {
-    account1Overdrawn = true;
-    console.log(account1Overdrawn);
-    return account1Overdrawn;
+function withdraw(value, primary, secondary) {
+  if(value <= primary) {
+    primary = primary - value;
   }
+  else if((value > primary) && (value <= (secondary + primary))) {
+    secondary = (primary + secondary) - value;
+    primary = 0;
+  }
+    //return primary + secondary
+  return [primary, secondary];
 }
 
-
+// applys css to match the current state of ballance1 & ballace2
+// updates the HTML within page to represent variable balance1 or balance2
+// resets inputs back to nothing after funtion. 
 function updateAccountsHTML() {
-    $('#balance1').html('£' + balance1);
-    $('#balance2').html('£' + balance2);
-    $('#amount1').val('');
-    $('#amount2').val('');
+  if(balance1 <= 0){
+    $('#balance1').addClass('zero');
+  } else{
+    $('#balance1').removeClass('zero');
+  }
+
+  if(balance2 <= 0){
+    $('#balance2').addClass('zero');
+  } else {
+    $('#balance2').removeClass('zero');
+  }
+
+  $('#balance1').text('£' + balance1);
+  $('#balance2').text('£' + balance2);
+  $('#amount1').val('');
+  $('#amount2').val('');
 }
+
+
 
