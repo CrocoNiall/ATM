@@ -38,6 +38,9 @@ function withdrawAccount1() {
   updateAccountsHTML();
 }
 
+//uses the withdraw function to calculate if user is withdrawing a valid amount
+//uses the return values to update balance variables 
+//calls the update HTML Function
 
 function withdrawAccount2() {
   var amount = parseInt($('#amount2').val());
@@ -45,10 +48,14 @@ function withdrawAccount2() {
 
   balance2 = balances[0];
   balance1 = balances[1];
-  
+
   updateAccountsHTML();
 }
 
+
+//if account not going overdrawn, perform calculation.
+//if both accounts not going overdawm, perform alculation
+//return valuess in the form of an array.
 function withdraw(value, primary, secondary) {
   if(value <= primary) {
     primary = primary - value;
@@ -65,6 +72,8 @@ function withdraw(value, primary, secondary) {
 // updates the HTML within page to represent variable balance1 or balance2
 // resets inputs back to nothing after funtion. 
 function updateAccountsHTML() {
+
+//if balance is 0 or less, apply class zero 
   if(balance1 <= 0){
     $('#balance1').addClass('zero');
   } else{
@@ -77,8 +86,10 @@ function updateAccountsHTML() {
     $('#balance2').removeClass('zero');
   }
 
+//selects element and updates text to match balance
   $('#balance1').text('£' + balance1);
   $('#balance2').text('£' + balance2);
+//sets input fields to ''
   $('#amount1').val('');
   $('#amount2').val('');
 }
